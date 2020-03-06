@@ -1,0 +1,276 @@
+%{
+   
+	#include <stdio.h>
+	#include <stdlib.h>
+	#include <string.h>
+	#include <stdbool.h>
+	extern int yylineno;
+	extern int yylex(void);
+	extern char *yytext;
+	void yyerror(char *s);
+%}
+
+%union
+{
+	int Numeros;
+	char* Texto;
+}
+
+%token DELIM
+%token DIGITO
+%token <numeros> NUMERO
+%token TEXTO
+%token DEFINIRID
+%token WHILE
+%token FOR
+%token FOREACH
+%token DO
+%token IF
+%token SWITCH
+%token ELSE
+%token CASE
+%token FUNCION
+%token AFIRMACION
+%token NEGACION
+%token ASIGNACION
+%token PARIZQ
+%token PARDER
+%token CORIZQ
+%token CORDER
+%token LLAVEIZQ
+%token LLAVEDER
+%token IMPRESION
+%token IMPRESIONLINEA
+%token LECTURA
+%token OPERADORARITMETICO
+%token OPRELACIONAL
+%token TIPODATO
+%token RETORNAR
+%token NULO
+%token MODIFICADOR
+%token CONTINUAR
+%token BREAK
+%token GOTO
+%token DOSPUNTOS
+%token PUNTOCOMA
+%token COMA
+%token PUNTUACION
+%token ASIGNAR
+%token INCREMENTO
+%token END
+%token IN
+%token COMO
+%token LOOP
+%token TIPOPROTECCION
+%token INTERFAZ
+%token CLASE
+%token ESTRUCTURA
+%token MODULO
+%token VOID
+%token ARGUMENTO
+%token CONVERTIR
+%token MAIN
+%token DELEGAR
+%token ANADIR
+%token LISTA
+%token LISTALIGADA
+%token PILA
+%token COLA
+%token ORDERNAR
+%token CONTAR
+%token LIMPIAR
+%token CONTIENE
+%token REMOVE
+%token REMOVEAT
+%token INSERTAR
+%token REMOVER
+%token PEEK
+%token ARCHIVO
+%token LECTORBINARIO
+%token COMPARACIONIGUAL
+%token DESTRUCTOR
+%token OPERADORLOGICO
+%token UTILIZANDO
+%token OBJETO
+%token DESCGET
+%token DESCSET
+%token REFERENCIA
+%token 	AGRUPAR
+%token POR
+%token PREDICADO
+%token EXPORTAR
+%token EXTIENE
+%token IMPLEMENTA
+%token INSTANCIADE
+%token DECMODULO
+%token NATIVO
+%token PAQUETE
+%token REQUIERE
+%token RESREDONDEO
+%token SUPER
+%token BLOQUEOMUTEX
+%token TRANSIENT
+%token EJECUTAR
+%token ASCII
+%token MAXIMO
+%token MINIMO
+%token ALLVERDADERO
+%token SUMIZQDER
+%token RETORNARBIN
+%token NAKED
+%token IMPORTARDLL
+%token NOMBRETIPO
+%token REGISTRAR
+%token FIJO
+%token LOCK
+%token SINRETORNO
+%token NOOP
+%token ASSIME
+%token BASED
+%token RAISE
+%token NOTABLE
+%token MUTABLE
+%token PROPIEDAD
+%token EVENTO
+%token FASTCALL
+%token ALOJARPILA
+%token PIN
+%token ASSERTION
+%token ALTER
+%token PROMEDIO
+%token CONECTAR
+%token CONTENEDOR
+%token MONEDA
+%token SALIDA
+%token DROP
+%token EXISTE
+%token ABRIR
+%token SQL
+%token USUARIO
+%token YEARS
+%token SKIP
+%token EXTERNALSOURCE
+%token ISTRUE
+%token MID
+%token HASTA
+%token REGION
+%token TOMAR
+%token OBTENERXML
+%token SINO
+%token SOBREESCRIBIR
+%token OPTIONAL
+%token GENERAREVENTO
+%token PARAR
+%token EMPEZAR
+%token XOR
+%token EXPANDIR
+%token SYNCLOCK
+%token SHADOWS
+%token TOP
+%token SELECTESQUEMA
+%token COALESCE
+%token ENTRE
+%token ADMINDB
+%token COPIARSTRING
+%token COPIARCARACTER
+%token COMPARARSTRING
+%token DETLONGITUD
+%token CONCATSTRING
+%token PRIMERAOCURRENCIA
+%token DELIMTOKEN
+%token ESALFANUMERICO
+%token ESALFABETICO
+%token ESDIGITO
+%token ISPOWER
+%token DOMAIN
+%token PORCENTAJE
+%token VIEW
+%token DEFAULT
+%token METODO
+%token IDEN
+
+%start SimboloInicial
+
+%%
+
+SimboloInicial: InstMain InstClases {printf("SimboloInicial \n");}
+
+InstMain: TIPOPROTECCION TIPODATO MAIN PARIZQ PARDER Instrucciones END MAIN{printf("produccion IMain \n");}
+
+Clase: TIPOPROTECCION CLASE IDEN DOSPUNTOS ProcedimientoGenerico END CLASE;
+
+InstClases: | Clase InstClases {printf("Produccion InstClases \n");}
+
+InstDefinirIDEN: DEFINIRID IDEN COMO TIPODATO PUNTOCOMA  {printf("Produccion InstDefinirIDEN \n");}
+
+DefinicionAsig: NUMERO | TEXTO | IDEN | DIGITO;
+
+Asignar: IDEN ASIGNACION DefinicionAsig PUNTOCOMA{printf("Produccion AsignarValor \n");}
+
+Bloque: InstDefinirIDEN | InstWhile | InstIf | InstDoWhile | Asignar|InstForEach|InstLlamada |InstFor |InstSwitch |InstOperacion
+
+Instrucciones: | Bloque Instrucciones 
+
+InstWhile: WHILE Condicion DOSPUNTOS Instrucciones END WHILE {printf("Produccion InstWhile \n");}
+
+InstIf: IF Condicion DOSPUNTOS Instrucciones InstElse END IF {printf("Produccion InstIF \n");};
+
+InstDoWhile: DO WHILE Condicion DOSPUNTOS Bloque END LOOP {printf("Produccion InstDoWhile \n");}
+
+InstFor: FOR PARIZQ TIPODATO IDEN ASIGNACION DIGITO PUNTOCOMA Comparacion PUNTOCOMA IDEN INCREMENTO PARDER DOSPUNTOS Instrucciones END FOR {printf("Produccion InstFor \n");}
+
+InstForEach: FOREACH PARIZQ IDEN IN IDEN PARDER DOSPUNTOS Instrucciones END FOREACH {printf("Produccion ForEach \n");};
+
+Condicion: PARIZQ Comparacion PARDER;
+
+Comparacion: IDEN OPRELACIONAL Comparacion2;
+
+Comparacion2: IDEN | NUMERO |DIGITO
+
+ProcedimientoGenerico: | TIPOPROTECCION IDEN PARIZQ InstParametros PARDER COMO Procedimientos {printf("InstProcedimiento \n");}
+
+Procedimientos: InstFuncion | InstMetodo
+
+InstFuncion: TIPODATO DOSPUNTOS Instrucciones RETORNAR IDEN END FUNCION {printf("InstFuncion \n");}
+
+InstMetodo: VOID DOSPUNTOS Instrucciones END METODO {printf("InstMetodo \n");}
+
+Parametro: IDEN COMO TIPODATO
+
+MasParametros: | COMA Parametro MasParametros
+
+InstParametros: | Parametro MasParametros {printf("Produccion InstParametros \n");}
+
+InstElse: | ELSE DOSPUNTOS Instrucciones  {printf("Produccion Else \n");}
+
+Separador: IDEN | DIGITO | NUMERO |TEXTO
+
+InstLlamada: IDEN PARIZQ Separador PARDER PUNTOCOMA {printf("Produccion Llamada\n");}
+
+InstSwitch: SWITCH PARIZQ IDEN PARDER DOSPUNTOS MasCase InstDefault END SWITCH {printf("Produccion Switch\n");}
+
+MasCase: | InstCase MasCase;
+
+InstCase: CASE Separador DOSPUNTOS Instrucciones BREAK {printf("Produccion Case \n");}
+
+InstCase: CASE Separador DOSPUNTOS Instrucciones error {printf("Error en producción InstCase");}
+
+InstDefault: | DEFAULT DOSPUNTOS Instrucciones BREAK {printf("Produccion Default \n");}
+
+InstOperacion:  IDEN OPERADORARITMETICO IDEN {printf("Produccion InstOperacion \n");}
+
+%%
+
+void yyerror(char *s)
+{
+	printf("\n Error en la sintaxis: %s \n",s);
+}
+
+int main()
+{
+    FILE *yyin;
+    yyin = fopen("Codigo.txt","r");
+    if (yyparse()==0)
+    printf("\nEl codigo ingresado es correcto.");
+    return 0;
+}

@@ -1,0 +1,15 @@
+public int main ()
+if    (a>b):
+c = d;
+
+Oa(5);
+End if
+End main
+
+public class Oa:
+
+public Holi (A as int) as void:
+
+End method
+End class
+
